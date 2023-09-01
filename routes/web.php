@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// --------------------------------- Rutas OAuth Socialite
+Route::get('/google-auth/redirect', function () {
+    return Socialite::driver('google')->redirect();
+});
+ 
+Route::get('/google-auth/callback', function () {
+    $user = Socialite::driver('google')->user();
+ 
+    // $user->token
+});
+
+// --------------------------------- Rutas Admin
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
