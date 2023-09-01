@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
 use Laravel\Socialite\Facades\Socialite;
+
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +28,27 @@ Route::get('/google-auth/redirect', function () {
 });
  
 Route::get('/google-auth/callback', function () {
-    $user = Socialite::driver('google')->user();
+    // El método stateless permite eliminar la verificación de estado de sesión, al hacer google auth no se necesitan cookies
+    $googleUser = Socialite::driver('google')->stateless()->user();
+
+    //dd($user);
+    
+    // Busca si existe un usuario con el google_id que nos envía socialite y actualiza, si no, crea un nuevo usuario en BD
+    $user = User::updateOrCreate(
+        [
+            'google_id' => $googleUser->id,
+        ], 
+        [
+            'name' => $googleUser->name,
+            'email' => $googleUser->email,
+        ]
+    );
+ 
+    // Hacer login con el usuario
+    Auth::login($user);
+ 
+    // Redirigirlo al dashboard
+    return redirect('/dashboard');
  
     // $user->token
 });
