@@ -34,8 +34,7 @@ return [
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        // 'redirect' => env('GOOGLE_REDIRECT_URL'),
-        'redirect' => 'http://mh-sso-l10google.com:8000/google-auth/callback',
+        'redirect' => env('GOOGLE_REDIRECT_URL'),
     ],
 
 ];
